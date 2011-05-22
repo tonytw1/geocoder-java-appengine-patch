@@ -1,5 +1,14 @@
 package com.google.code.geocoder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.google.code.geocoder.http.HttpClientBasedHttpFetcher;
+import com.google.code.geocoder.http.HttpFetcher;
 import com.google.code.geocoder.model.GeocodeResponse;
 import com.google.code.geocoder.model.GeocoderRequest;
 import com.google.code.geocoder.model.LatLng;
@@ -7,19 +16,6 @@ import com.google.code.geocoder.model.LatLngBounds;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * @author <a href="mailto:panchmp@gmail.com">Michael Panchenko</a>
@@ -28,19 +24,15 @@ public class Geocoder {
     private Log log = LogFactory.getLog(Geocoder.class);
 
     private static final String GEOCODE_REQUEST_URL = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false";
-    private static final HttpClient HTTP_CLIENT = new HttpClient(new MultiThreadedHttpConnectionManager());
-
+    private static HttpFetcher httpFetcher = new HttpClientBasedHttpFetcher();
+    
     public Geocoder() {
     }
-
-    public HttpClient getHttpClient() {
-        return HTTP_CLIENT;
-    }
-
+    
     public GeocodeResponse geocode(final GeocoderRequest geocoderRequest) {
         try {
-            final String urlString = getURL(geocoderRequest);            
-            final String jsonResponse = getHttpResponse(urlString);
+            final String url = getURL(geocoderRequest);    
+            final String jsonResponse = httpFetcher.getResponseForUrl(url);
             final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
             return gson.fromJson(jsonResponse, GeocodeResponse.class);
             
@@ -50,23 +42,8 @@ public class Geocoder {
         }
     }
     
-	private String getHttpResponse(final String urlString) throws IOException, HttpException, UnsupportedEncodingException {
-		final GetMethod getMethod = new GetMethod(urlString);
-		try {
-			HTTP_CLIENT.executeMethod(getMethod);			
-			final Reader reader = new InputStreamReader(getMethod.getResponseBodyAsStream(), getMethod.getResponseCharSet());
-			
-			final StringBuilder response = new StringBuilder();
-			int read = reader.read();
-			while(read > 0) {
-				response.append(Character.toChars(read));
-				read = reader.read();
-			}
-			return response.toString();
-			
-		} finally {
-			getMethod.releaseConnection();			
-		}        
+	public HttpFetcher getHttpFetcher() {
+		return httpFetcher;
 	}
 	
     protected String getURL(final GeocoderRequest geocoderRequest) throws UnsupportedEncodingException {
@@ -102,4 +79,5 @@ public class Geocoder {
         }
         return urlString;
     }
+
 }

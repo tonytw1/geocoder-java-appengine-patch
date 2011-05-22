@@ -16,7 +16,7 @@ public class ProxyGeocoderTest extends Assert {
     @BeforeClass
     public static void setUp() {
         geocoder = new Geocoder();
-        geocoder.getHttpClient().getHostConfiguration().setProxy("220.231.93.41", 80);
+        geocoder.getHttpFetcher().setProxy("220.231.93.41", 80);
     }
 
     @Test
