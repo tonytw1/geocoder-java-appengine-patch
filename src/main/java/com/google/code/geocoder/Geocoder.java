@@ -8,12 +8,14 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -37,25 +39,36 @@ public class Geocoder {
 
     public GeocodeResponse geocode(final GeocoderRequest geocoderRequest) {
         try {
-            final String urlString = getURL(geocoderRequest);
-
+            final String urlString = getURL(geocoderRequest);            
+            final String jsonResponse = getHttpResponse(urlString);
             final Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
-
-            final GetMethod getMethod = new GetMethod(urlString);
-            try {
-                HTTP_CLIENT.executeMethod(getMethod);
-                final Reader reader = new InputStreamReader(getMethod.getResponseBodyAsStream(), getMethod.getResponseCharSet());
-
-                return gson.fromJson(reader, GeocodeResponse.class);
-            } finally {
-                getMethod.releaseConnection();
-            }
+            return gson.fromJson(jsonResponse, GeocodeResponse.class);
+            
         } catch (Exception e) {
             log.error(e);
             return null;
         }
     }
-
+    
+	private String getHttpResponse(final String urlString) throws IOException, HttpException, UnsupportedEncodingException {
+		final GetMethod getMethod = new GetMethod(urlString);
+		try {
+			HTTP_CLIENT.executeMethod(getMethod);			
+			final Reader reader = new InputStreamReader(getMethod.getResponseBodyAsStream(), getMethod.getResponseCharSet());
+			
+			final StringBuilder response = new StringBuilder();
+			int read = reader.read();
+			while(read > 0) {
+				response.append(Character.toChars(read));
+				read = reader.read();
+			}
+			return response.toString();
+			
+		} finally {
+			getMethod.releaseConnection();			
+		}        
+	}
+	
     protected String getURL(final GeocoderRequest geocoderRequest) throws UnsupportedEncodingException {
         if (log.isTraceEnabled()) {
             log.trace(geocoderRequest);
