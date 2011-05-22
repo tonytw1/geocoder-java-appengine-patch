@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.code.geocoder.http.HttpClientBasedHttpFetcher;
+import com.google.code.geocoder.http.AppEngineUrlFetchServiceHttpFetcher;
 import com.google.code.geocoder.http.HttpFetcher;
 import com.google.code.geocoder.model.GeocodeResponse;
 import com.google.code.geocoder.model.GeocoderRequest;
@@ -24,7 +24,7 @@ public class Geocoder {
     private Log log = LogFactory.getLog(Geocoder.class);
 
     private static final String GEOCODE_REQUEST_URL = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false";
-    private static HttpFetcher httpFetcher = new HttpClientBasedHttpFetcher();
+    private static HttpFetcher httpFetcher = new AppEngineUrlFetchServiceHttpFetcher();
     
     public Geocoder() {
     }
