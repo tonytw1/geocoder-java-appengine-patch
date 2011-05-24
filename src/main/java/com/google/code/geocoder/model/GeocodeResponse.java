@@ -1,12 +1,16 @@
 package com.google.code.geocoder.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author <a href="mailto:panchmp@gmail.com">Michael Panchenko</a>
  */
-public class GeocodeResponse {
-    protected GeocoderStatus status;
+public class GeocodeResponse implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
+	protected GeocoderStatus status;
     protected List<GeocoderResult> results;
 
     public GeocodeResponse() {

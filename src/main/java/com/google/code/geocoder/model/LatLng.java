@@ -1,13 +1,17 @@
 package com.google.code.geocoder.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * @author <a href="mailto:panchmp@gmail.com">Michael Panchenko</a>
  * @link http://code.google.com/intl/uk/apis/maps/documentation/javascript/reference.html#LatLng
  */
-public class LatLng {
-    private BigDecimal lat, lng;
+public class LatLng implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
+	private BigDecimal lat, lng;
 
     public LatLng() {
     }

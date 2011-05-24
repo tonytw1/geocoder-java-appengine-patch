@@ -1,10 +1,15 @@
 package com.google.code.geocoder.model;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:panchmp@gmail.com">Michael Panchenko</a>
  */
-public class LatLngBounds {
-    private LatLng southwest, northeast;
+public class LatLngBounds implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
+	private LatLng southwest, northeast;
 
     public LatLngBounds() {
     }

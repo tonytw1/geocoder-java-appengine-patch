@@ -1,9 +1,11 @@
 package com.google.code.geocoder.model;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:panchmp@gmail.com">Michael Panchenko</a>
  */
-public enum GeocoderResultType {
+public enum GeocoderResultType implements Serializable {
 
     STREET_ADDRESS("street_address"),
     ROUTE("route"),

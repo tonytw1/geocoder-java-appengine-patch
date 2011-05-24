@@ -1,10 +1,12 @@
 package com.google.code.geocoder.model;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:panchmp@gmail.com">Michael Panchenko</a>
  */
-public enum GeocoderStatus {
-
+public enum GeocoderStatus implements Serializable {
+	
     ERROR,
     INVALID_REQUEST,
     OK,

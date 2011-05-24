@@ -1,9 +1,12 @@
 package com.google.code.geocoder.model;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:panchmp@gmail.com">Michael Panchenko</a>
  */
-public enum GeocoderLocationType {
+public enum GeocoderLocationType implements Serializable {
+		
     APPROXIMATE,
     GEOMETRIC_CENTER,
     RANGE_INTERPOLATED,
