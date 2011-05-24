@@ -7,13 +7,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 
-
 public class AppEngineUrlFetchServiceHttpFetcher implements HttpFetcher {
+	
+    private Log log = LogFactory.getLog(AppEngineUrlFetchServiceHttpFetcher.class);
 
 	@Override
 	public String getResponseForUrl(String url) {
@@ -58,6 +62,7 @@ public class AppEngineUrlFetchServiceHttpFetcher implements HttpFetcher {
     	   }
     	   
        } catch (Exception e) {
+    	   log.error(e);
     	   return null;
        }
 	}
